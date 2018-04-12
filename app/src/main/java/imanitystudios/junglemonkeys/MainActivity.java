@@ -11,6 +11,7 @@ File Description: it's our Main activity
 
 package imanitystudios.junglemonkeys;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -21,9 +22,11 @@ import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.View;
 import android.view.Window;
 
 public class MainActivity extends AppCompatActivity {
+
 
     Rect rectToBeDrawn;
 
@@ -45,14 +48,16 @@ public class MainActivity extends AppCompatActivity {
 
     Intent i;
 
-
+    DrawingClass drawingClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -63,12 +68,34 @@ public class MainActivity extends AppCompatActivity {
         screenHeight = size.y;
 
         background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
+
+        drawingClass = new DrawingClass(this);
+        setContentView(drawingClass);
+
     }
 
+    class DrawingClass extends View
+    {
+        public DrawingClass(Context context) {
+            super(context);
+        }
 
+        @Override
+        protected void onSizeChanged(int w, int h, int oldw, int oldh)
+        {
+            super.onSizeChanged(w, h, oldw, oldh);
+            background = Bitmap.createScaledBitmap(background, w, h, true);
+        }
 
+        @Override
+        protected  void onDraw(Canvas canvas)
+        {
+            super.onDraw(canvas);
 
-
+            canvas.drawBitmap(background,0,0, null);
+            invalidate();
+        }
+    }
 
 
 }
