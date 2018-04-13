@@ -18,7 +18,7 @@ import android.view.View;
  * Created by tahasaleem on 2018-04-12.
  */
 
-public class Enemy extends SurfaceView implements Runnable {
+public class Enemy extends SurfaceView{
 
      //nvas;
     private Bitmap monkey;
@@ -30,6 +30,8 @@ public class Enemy extends SurfaceView implements Runnable {
     int screenWidth;
     int screenHeight;
     long timeThisFrame = 0;
+    float deltaTime;
+    float animationClock = 0.0f;
 
     Intent i;
     Thread ourThread = null;
@@ -48,27 +50,17 @@ public class Enemy extends SurfaceView implements Runnable {
         ourHolder = getHolder();
         paint = new Paint();
 
-        ourThread = new Thread(this);
-        ourThread.start();
+        rectToBeDrawn = new Rect((frameNumber*monkeyW)-1,0,(frameNumber*monkeyW+monkeyW)-1,monkeyH);
+
     }
-    public void update(){
-
-        timeThisFrame = System.currentTimeMillis();
-
-        System.out.println(timeThisFrame);
-        if(timeThisFrame >= 1000)
-        {
-            rectToBeDrawn = new Rect((frameNumber*monkeyW)-1,0,(frameNumber*monkeyW+monkeyW)-1,monkeyH);
-            frameNumber++;
-
-            if(numbFrames==frameNumber)
-            {
-                frameNumber = 0;
-            }
-            timeThisFrame = 0;
-        }
-
-
+    public void update()
+    {
+         rectToBeDrawn = new Rect((frameNumber*monkeyW)-1,0,(frameNumber*monkeyW+monkeyW)-1,monkeyH);
+         frameNumber++;
+         if(numbFrames==frameNumber)
+         {
+             frameNumber = 0;
+         }
     }
 
     public void drawMonkey(Canvas canvas)
@@ -83,14 +75,5 @@ public class Enemy extends SurfaceView implements Runnable {
         screenHeight = h;
     }
 
-    @Override
-    public void run() {
-
-        while(playingAnim)
-       {
-           update();
-       }
-
-    }
 }
 

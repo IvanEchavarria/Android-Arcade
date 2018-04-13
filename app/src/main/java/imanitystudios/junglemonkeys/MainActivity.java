@@ -17,11 +17,14 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 
@@ -30,14 +33,9 @@ public class MainActivity extends AppCompatActivity {
 
     Rect rectToBeDrawn;
 
-    public Canvas canvas;
+    Canvas canvas;
 
-    Bitmap enemyAnimation;
     Bitmap background;
-
-    int frameHeight = 221;
-    int frameWidth = 224;
-    int frameNumber;
 
     int screenWidth;
     int screenHeight;
@@ -80,10 +78,86 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    class DrawingClass extends View
+    class DrawingClass extends SurfaceView implements Runnable
     {
+        Thread ourThread = null;
+        SurfaceHolder ourHolder;
+        volatile boolean playing;
+        Paint paint;
+
+
         public DrawingClass(Context context) {
             super(context);
+            ourHolder = getHolder();
+            paint = new Paint();
+        }
+
+        @Override
+        public void run() {
+
+            while (playing)
+            {
+                update();
+                draw();
+                controlFPS();
+            }
+
+        }
+
+        public void update()
+        {
+            monkey.update();
+        }
+
+        private void draw()
+        {
+            if(ourHolder.getSurface().isValid())
+            {
+                canvas = ourHolder.lockCanvas();
+                canvas.drawBitmap(background,0,0, null);
+                monkey.drawMonkey(canvas);
+                ourHolder.unlockCanvasAndPost(canvas);
+            }
+        }
+
+        public void controlFPS()
+        {
+            long timeThisFrame = (System.currentTimeMillis() - lastFrameTime);
+            long timeToSleep = 500 - timeThisFrame;
+            if(timeThisFrame > 0)
+            {
+                fps = (int) (1000 / timeThisFrame);
+            }
+            if(timeToSleep >0)
+            {
+                try
+                {
+                    ourThread.sleep(timeToSleep);
+                }
+                catch (InterruptedException e)
+                {
+
+                }
+            }
+            lastFrameTime = System.currentTimeMillis();
+        }
+
+        public void pause()
+        {
+            playing = false;
+            try {
+                ourThread.join();
+            }
+            catch (InterruptedException e)
+            {
+            }
+        }
+        public void resume()
+        {
+            playing = true;
+            ourThread = new Thread(this);
+            ourThread.start();
+
         }
 
         @Override
@@ -92,19 +166,18 @@ public class MainActivity extends AppCompatActivity {
             super.onSizeChanged(w, h, oldw, oldh);
             background = Bitmap.createScaledBitmap(background, w, h, true);
         }
+    }
 
-        @Override
-        protected  void onDraw(Canvas canvas)
-        {
-            super.onDraw(canvas);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        drawingClass.resume();
+    }
 
-            canvas.drawBitmap(background,0,0, null);
-
-            //System.out.println("IS THIS BEING CALLED?");
-           monkey.drawMonkey(canvas);
-           invalidate();
-        }
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        drawingClass.pause();
     }
 
 
