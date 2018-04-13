@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     Rect rectToBeDrawn;
 
-    Canvas canvas;
+    public Canvas canvas;
 
     Bitmap enemyAnimation;
     Bitmap background;
@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     Intent i;
 
     DrawingClass drawingClass;
+
+    Enemy monkey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,11 @@ public class MainActivity extends AppCompatActivity {
         background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
 
         drawingClass = new DrawingClass(this);
+        monkey = new Enemy(this);
+
+        monkey.setScreen(screenWidth, screenHeight);
         setContentView(drawingClass);
+
 
     }
 
@@ -93,8 +99,12 @@ public class MainActivity extends AppCompatActivity {
             super.onDraw(canvas);
 
             canvas.drawBitmap(background,0,0, null);
-            invalidate();
+
+            //System.out.println("IS THIS BEING CALLED?");
+           monkey.drawMonkey(canvas);
+           invalidate();
         }
+
     }
 
 
