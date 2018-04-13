@@ -39,6 +39,15 @@ public class Enemy extends SurfaceView{
     volatile boolean playingAnim = true;
     Paint paint;
 
+    //pos and move the gab between the numbers should be always 200
+    int left = 600;
+    int right = 800;
+    int top = 100;
+    int bottom = 300;
+    int speed = 30;
+    int stopLocation = -660;
+    boolean move = true;
+    //setting up the
     public Enemy(Context context)
     {
         super(context);
@@ -46,26 +55,29 @@ public class Enemy extends SurfaceView{
         monkeyH = monkey.getHeight();
         monkeyW = monkey.getWidth()/numbFrames;
 
-
         ourHolder = getHolder();
         paint = new Paint();
-
-        rectToBeDrawn = new Rect((frameNumber*monkeyW)-1,0,(frameNumber*monkeyW+monkeyW)-1,monkeyH);
-
     }
+    //The update is in charge of making the animation move and move the monkey
     public void update()
     {
-         rectToBeDrawn = new Rect((frameNumber*monkeyW)-1,0,(frameNumber*monkeyW+monkeyW)-1,monkeyH);
-         frameNumber++;
-         if(numbFrames==frameNumber)
-         {
-             frameNumber = 0;
-         }
+        if(left >= stopLocation)
+        {
+            rectToBeDrawn = new Rect((frameNumber * monkeyW) - 1, 0, (frameNumber * monkeyW + monkeyW) - 1, monkeyH);
+            frameNumber++;
+            if (numbFrames == frameNumber) {
+                frameNumber = 0;
+            }
+            left -= speed;
+            right -= speed;
+        }
+        System.out.println(left);
     }
 
+    //control where the monkey is drawn
     public void drawMonkey(Canvas canvas)
     {
-        Rect destRect = new Rect (screenWidth/2-100,screenHeight/2-100,screenWidth/2+100,screenHeight/2+100);
+        Rect destRect = new Rect (screenWidth/2+left,screenHeight/2+top,screenWidth/2+right,screenHeight/2+bottom);
         canvas.drawBitmap(monkey,rectToBeDrawn, destRect, paint);
     }//katy is the best
 
