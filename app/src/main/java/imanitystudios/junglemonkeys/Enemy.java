@@ -19,8 +19,6 @@ import android.view.View;
  */
 
 public class Enemy extends SurfaceView{
-
-     //nvas;
     private Bitmap monkey;
     int monkeyW;
     int monkeyH;
@@ -39,6 +37,8 @@ public class Enemy extends SurfaceView{
     volatile boolean playingAnim = true;
     Paint paint;
 
+
+    int hp = 100;
     //pos and move the gab between the numbers should be always 200
     int left = 600;
     int right = 800;
@@ -61,15 +61,21 @@ public class Enemy extends SurfaceView{
     //The update is in charge of making the animation move and move the monkey
     public void update()
     {
+        rectToBeDrawn = new Rect((frameNumber * monkeyW) - 1, 0, (frameNumber * monkeyW + monkeyW) - 1, monkeyH);
         if(left >= stopLocation)
         {
-            rectToBeDrawn = new Rect((frameNumber * monkeyW) - 1, 0, (frameNumber * monkeyW + monkeyW) - 1, monkeyH);
             frameNumber++;
             if (numbFrames == frameNumber) {
                 frameNumber = 0;
             }
             left -= speed;
             right -= speed;
+
+        }
+        if(left <= stopLocation)
+        {
+            move = true;
+            frameNumber = 0;
         }
         System.out.println(left);
     }
@@ -85,6 +91,16 @@ public class Enemy extends SurfaceView{
     {
         screenWidth = w;
         screenHeight = h;
+    }
+    public void setLocation(int L, int B,int T, int R){
+        left = L;
+        bottom = B;
+        top = T;
+        right = R;
+    }
+    public void damage(int attack)
+    {
+        hp -= attack;
     }
 
 }
