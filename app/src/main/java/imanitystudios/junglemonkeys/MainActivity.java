@@ -23,10 +23,12 @@ import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,12 +39,27 @@ public class MainActivity extends AppCompatActivity {
 
     Bitmap background;
 
+    Bitmap candy;
+    int   candyPosX;
+    int   candyPosy;
+
+    Bitmap cola;
+    int   colaPosX;
+    int   colaPosy;
+
+    Bitmap gummy;
+    int   gummyPosX;
+    int   gummyPosy;
+
+
     int screenWidth;
     int screenHeight;
 
     long lastFrameTime;
     int fps;
     int hi;
+
+    boolean buttonPressed = false;
 
     Intent i;
 
@@ -69,11 +86,62 @@ public class MainActivity extends AppCompatActivity {
 
         background = BitmapFactory.decodeResource(getResources(), R.drawable.background);
 
+        candy = BitmapFactory.decodeResource(getResources(), R.drawable.candy);
+        candy = Bitmap.createScaledBitmap(candy, 160, 160, true);
+
+        candyPosX = 100;
+        candyPosy = screenHeight - candy.getHeight() - 90 ;
+
+        cola =BitmapFactory.decodeResource(getResources(), R.drawable.cola) ;
+        cola = Bitmap.createScaledBitmap(cola, 160, 160, true);
+
+        colaPosX = 100 + candy.getWidth();
+        colaPosy = screenHeight - cola.getHeight() - 90;
+
+        gummy = BitmapFactory.decodeResource(getResources(), R.drawable.gummy);
+        gummy = Bitmap.createScaledBitmap(gummy, 160, 160, true);
+
+        gummyPosX = 100 + candy.getWidth() + gummy.getWidth();
+        gummyPosy = screenHeight - gummy.getHeight() - 90;
+
         drawingClass = new DrawingClass(this);
         monkey = new Enemy(this);
 
         monkey.setScreen(screenWidth, screenHeight);
         setContentView(drawingClass);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int action = event.getAction();
+
+        switch (action)
+        {
+            case (MotionEvent.ACTION_DOWN) :
+
+               float  xInitial = event.getRawX();
+               float  yInitial = event.getRawY();
+
+                if( !buttonPressed && xInitial >= candyPosX && xInitial <= candyPosX + candy.getWidth())
+                {
+                    if(yInitial >= candyPosy && yInitial <= candyPosy + candy.getHeight())
+                    {
+                        buttonPressed = true;
+                        Toast.makeText(this,"pressed Candy button",Toast.LENGTH_LONG).show();
+                    }
+                }
+                return true;
+
+            case (MotionEvent.ACTION_UP) :
+
+                buttonPressed = false;
+                return true;
+        }
+
+        return super.onTouchEvent(event);
+
+
 
 
     }
@@ -116,6 +184,12 @@ public class MainActivity extends AppCompatActivity {
                 canvas = ourHolder.lockCanvas();
                 canvas.drawBitmap(background,0,0, null);
                 monkey.drawMonkey(canvas);
+
+                canvas.drawBitmap(candy, 100, screenHeight - candy.getHeight() - 90 , null);
+                canvas.drawBitmap(cola, 100 + candy.getWidth(), screenHeight - cola.getHeight() - 90 , null);
+                canvas.drawBitmap(gummy, 100 + candy.getWidth() + gummy.getWidth(), screenHeight - gummy.getHeight() - 90 , null);
+
+
                 ourHolder.unlockCanvasAndPost(canvas);
             }
         }
