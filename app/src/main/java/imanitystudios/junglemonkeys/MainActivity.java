@@ -30,8 +30,12 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import java.util.Vector;
+
 public class MainActivity extends AppCompatActivity {
 
+
+    long timeThisFrame;
 
     Rect rectToBeDrawn;
 
@@ -67,13 +71,14 @@ public class MainActivity extends AppCompatActivity {
 
     Enemy monkey;
 
+    Vector<MentosAttack> mentosList;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         candyPosX = 100;
         candyPosy = screenHeight - candy.getHeight() - 90 ;
 
-        cola =BitmapFactory.decodeResource(getResources(), R.drawable.cola) ;
+        cola = BitmapFactory.decodeResource(getResources(), R.drawable.cola) ;
         cola = Bitmap.createScaledBitmap(cola, 160, 160, true);
 
         colaPosX = 100 + candy.getWidth();
@@ -109,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
         monkey.setScreen(screenWidth, screenHeight);
         setContentView(drawingClass);
+
+        mentosList = new Vector<>();
     }
 
     @Override
@@ -131,6 +138,29 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(this,"pressed Candy button",Toast.LENGTH_LONG).show();
                     }
                 }
+                else if(!buttonPressed && xInitial >= colaPosX && xInitial <= colaPosX + cola.getWidth())
+                {
+                    if(yInitial >= colaPosy && yInitial <= colaPosy + cola.getHeight())
+                    {
+                        buttonPressed = true;
+                        Toast.makeText(this,"pressed Cola button",Toast.LENGTH_LONG).show();
+                    }
+                }
+                else if(!buttonPressed && xInitial >= gummyPosX && xInitial <= gummyPosX + gummy.getWidth())
+                {
+                    if(yInitial >= gummyPosy && yInitial <= gummyPosy + gummy.getHeight())
+                    {
+                        buttonPressed = true;
+                        Toast.makeText(this,"pressed Gummy button",Toast.LENGTH_LONG).show();
+                    }
+                }
+                else
+                {
+                    MentosAttack mentoOBJ = new MentosAttack(this);
+                    mentoOBJ.setLocation((int)xInitial);
+                    mentoOBJ.setScreen(screenWidth, screenHeight);
+                    mentosList.add(mentoOBJ);
+                }
                 return true;
 
             case (MotionEvent.ACTION_UP) :
@@ -140,10 +170,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onTouchEvent(event);
-
-
-
-
     }
 
     class DrawingClass extends SurfaceView implements Runnable
@@ -161,20 +187,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void run() {
-
+        public void run()
+        {
             while (playing)
             {
                 update();
                 draw();
                 controlFPS();
             }
-
         }
 
         public void update()
         {
-            monkey.update();
         }
 
         private void draw()
@@ -182,22 +206,50 @@ public class MainActivity extends AppCompatActivity {
             if(ourHolder.getSurface().isValid())
             {
                 canvas = ourHolder.lockCanvas();
+
                 canvas.drawBitmap(background,0,0, null);
-                monkey.drawMonkey(canvas);
+
+                if(monkey != null)
+                {
+                    monkey.update();
+                    monkey.drawMonkey(canvas);
+                }
+
+                if(mentosList != null)
+                {
+                    for(int i = 0; i < mentosList.size(); i++)
+                    {
+                        if(mentosList.elementAt(i) != null)
+                        {
+                            mentosList.elementAt(i).update(timeThisFrame);
+                            mentosList.elementAt(i).drawMento(canvas);
+                            if(monkey != null)
+                            {
+                                if(mentosList.elementAt(i).getRectangle().intersect(monkey.getRectangle()))
+                                {
+                                    System.out.println("HIT LE MONKEY");
+                                    monkey = null;
+                                    mentosList.removeElementAt(i);
+                                }
+                            }
+                        }
+                    }
+                }
 
                 canvas.drawBitmap(candy, 100, screenHeight - candy.getHeight() - 90 , null);
                 canvas.drawBitmap(cola, 100 + candy.getWidth(), screenHeight - cola.getHeight() - 90 , null);
                 canvas.drawBitmap(gummy, 100 + candy.getWidth() + gummy.getWidth(), screenHeight - gummy.getHeight() - 90 , null);
 
-
                 ourHolder.unlockCanvasAndPost(canvas);
+
             }
         }
 
         public void controlFPS()
         {
-            long timeThisFrame = (System.currentTimeMillis() - lastFrameTime);
+            timeThisFrame = (System.currentTimeMillis() - lastFrameTime);
             long timeToSleep = 500 - timeThisFrame;
+
             if(timeThisFrame > 0)
             {
                 fps = (int) (1000 / timeThisFrame);

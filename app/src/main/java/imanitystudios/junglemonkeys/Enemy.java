@@ -23,13 +23,11 @@ public class Enemy extends SurfaceView{
     int monkeyW;
     int monkeyH;
     Rect rectToBeDrawn;
+    Rect destRect;
     int numbFrames = 4;
     int frameNumber;
     int screenWidth;
     int screenHeight;
-    long timeThisFrame = 0;
-    float deltaTime;
-    float animationClock = 0.0f;
 
     Intent i;
     Thread ourThread = null;
@@ -44,7 +42,7 @@ public class Enemy extends SurfaceView{
     int right = 800;
     int top = 100;
     int bottom = 300;
-    int speed = 30;
+    int speed = 6000;
     int stopLocation = -660;
     boolean move = true;
     //setting up the
@@ -55,6 +53,7 @@ public class Enemy extends SurfaceView{
         monkeyH = monkey.getHeight();
         monkeyW = monkey.getWidth()/numbFrames;
 
+        System.out.println("I am a fresh new Monkey");
         ourHolder = getHolder();
         paint = new Paint();
     }
@@ -68,22 +67,21 @@ public class Enemy extends SurfaceView{
             if (numbFrames == frameNumber) {
                 frameNumber = 0;
             }
-            left -= speed;
-            right -= speed;
-
+            left -= speed*0.02 ;
+            right -= speed*0.02;
         }
         if(left <= stopLocation)
         {
             move = true;
             frameNumber = 0;
         }
-        System.out.println(left);
+      //  System.out.println(left);
     }
 
     //control where the monkey is drawn
     public void drawMonkey(Canvas canvas)
     {
-        Rect destRect = new Rect (screenWidth/2+left,screenHeight/2+top,screenWidth/2+right,screenHeight/2+bottom);
+        destRect = new Rect (screenWidth/2+left,screenHeight/2+top,screenWidth/2+right,screenHeight/2+bottom);
         canvas.drawBitmap(monkey,rectToBeDrawn, destRect, paint);
     }//katy is the best
 
@@ -101,6 +99,11 @@ public class Enemy extends SurfaceView{
     public void damage(int attack)
     {
         hp -= attack;
+    }
+
+    public Rect getRectangle()
+    {
+        return destRect;
     }
 
 }
