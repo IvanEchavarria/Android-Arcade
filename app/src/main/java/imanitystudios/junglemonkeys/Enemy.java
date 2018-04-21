@@ -14,6 +14,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
+import java.util.Vector;
+
 /**
  * Created by tahasaleem on 2018-04-12.
  */
@@ -45,19 +47,11 @@ public class Enemy extends SurfaceView{
     int speed = 20;
     int stopLocation = 340;
     boolean move = true;
+    Context eContext;
+    int counter = 0;
 
+    boolean readyForAction = false;
 
-    //MonkeyAttack
-    private Bitmap banana;
-    int bananaW;
-    int bananaH;
-    Rect bananaToBeDrawn;
-    Rect bananaDestRect;
-    Paint bPaint;
-    int bFrameNumber = 0;
-    boolean attack = true;
-    int bLeft = -20;
-    int bTop = 80;
     //setting up the
     public Enemy(Context context)
     {
@@ -67,15 +61,8 @@ public class Enemy extends SurfaceView{
         monkeyH = monkey.getHeight();
         monkeyW = monkey.getWidth()/numbFrames;
 
-        //banana
-        banana = BitmapFactory.decodeResource(getResources(),R.drawable.banana);
-        banana = Bitmap.createScaledBitmap(banana, 85,85,true);
-        bananaH = banana.getHeight();
-        bananaW = banana.getWidth()/numbFrames;
+        eContext = context;
 
-        System.out.println("I am a fresh new Monkey");
-        ourHolder = getHolder();
-        paint = new Paint();
     }
     //The update is in charge of making the animation move and move the monkey
     public void update()
@@ -87,24 +74,17 @@ public class Enemy extends SurfaceView{
             if (numbFrames == frameNumber) {
                 frameNumber = 0;
             }
-            left -= speed ;
+            left -= speed;
         }
         if(left <= stopLocation)
         {
             move = true;
             frameNumber = 0;
         }
-        bananaToBeDrawn = new Rect((bFrameNumber * bananaW) - 1, 0, (bFrameNumber * bananaW + bananaW) - 1, bananaH);
-        if(attack)
-        {
-            bFrameNumber++;
-            if(bFrameNumber == numbFrames){
-                bFrameNumber = 0;
-            }
-            bLeft -=speed;
-
+        counter++;
+        if(counter == 5){
+            readyForAction = true;
         }
-        System.out.println(left);
     }
 
     //control where the monkey is drawn
@@ -113,8 +93,6 @@ public class Enemy extends SurfaceView{
         destRect = new Rect (left,top,left + monkeyW,top + monkeyH);
         canvas.drawBitmap(monkey,rectToBeDrawn, destRect, paint);
 
-        bananaDestRect = new Rect(left +bLeft,top +bTop,left + bLeft+bananaW,top+bTop+bananaH);
-        canvas.drawBitmap(banana, bananaToBeDrawn,bananaDestRect,bPaint);
     }//katy is the best
 
     public void setScreen(int w, int h)
@@ -136,6 +114,13 @@ public class Enemy extends SurfaceView{
     public Rect getRectangle()
     {
         return destRect;
+    }
+
+    public eBullets shoot()
+    {
+        readyForAction = false;
+        eBullets bulletOBJ = new eBullets(eContext, left, top);
+        return bulletOBJ;
     }
 
 }

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     ColaAttack colaAttack;
 
     Vector<MentosAttack> mentosList;
-
+    Vector<eBullets> eBulletList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         mentosList = new Vector<>();
 
+        eBulletList = new Vector<>();
 
     }
 
@@ -205,6 +206,18 @@ public class MainActivity extends AppCompatActivity {
 
         public void update()
         {
+            if(monkey.readyForAction)
+            {
+                addBullet(monkey.shoot());
+            }
+            if(eBulletList.size()>0)
+            {
+                for(int i = 0; i< eBulletList.size();i++)
+                {
+                    eBulletList.elementAt(i).update();
+                    eBulletList.elementAt(i).drawBanana(canvas);
+                }
+            }
         }
 
         private void draw()
@@ -309,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
             super.onSizeChanged(w, h, oldw, oldh);
             background = Bitmap.createScaledBitmap(background, w, h, true);
         }
+
     }
 
     @Override
@@ -321,6 +335,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         drawingClass.pause();
+    }
+    public void addBullet(eBullets bullets)
+    {
+        eBulletList.add(bullets);
     }
 
 
