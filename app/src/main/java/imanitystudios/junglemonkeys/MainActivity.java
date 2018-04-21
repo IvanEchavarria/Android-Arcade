@@ -173,11 +173,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    MentosAttack mentoOBJ = new MentosAttack(this);
-                    mentoOBJ.setLocation((int)xInitial);
-                    mentoOBJ.setScreen(screenWidth, screenHeight);
-                    mentosList.add(mentoOBJ);
-
+                    if(mentosList.size()<3) {
+                        MentosAttack mentoOBJ = new MentosAttack(this);
+                        mentoOBJ.setLocation((int) xInitial);
+                        mentoOBJ.setScreen(screenWidth, screenHeight);
+                        mentosList.add(mentoOBJ);
+                    }
 //                    Enemy monkey = new Enemy(globalContext);
 //                    monkey.setScreen(screenWidth, screenHeight);
 //                    enemyList.add(monkey);
@@ -225,8 +226,10 @@ public class MainActivity extends AppCompatActivity {
             if(enemySpawnerClock >= 5)
             {
                 enemySpawnerClock = 0;
-
-                createEnemy();
+                if(enemyList.size()<8)
+                {
+                    createEnemy();
+                }
             }
             enemySpawnerClock++;
 
@@ -407,6 +410,29 @@ public class MainActivity extends AppCompatActivity {
         }
         Enemy monkey = new Enemy(this);
         monkey.setScreen(screenWidth, screenHeight);
+        if(enemyList.size() == 0||enemyList.size() == 4)
+        {
+            monkey.setLocation(-100);
+        }
+        else if(enemyList.size() == 1||enemyList.size() ==5)
+        {
+            monkey.setLocation(-75);
+        }
+        else if(enemyList.size() == 2||enemyList.size() ==6)
+        {
+            monkey.setLocation(-50);
+        }
+        else if(enemyList.size() == 3||enemyList.size() ==7)
+        {
+            monkey.setLocation(0);
+        }
+        if(enemyList.size()>=4 &&enemyList.size()<8)
+        {
+            monkey.setStopPoint(120);
+        }
+        else if(enemyList.size()>=8){
+            monkey.setStopPoint(240);
+        }
         enemyList.add(monkey);
     }
 

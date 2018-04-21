@@ -36,14 +36,14 @@ public class ColaAttack extends SurfaceView {
     int top = 820;
     int bottom = 100;
 
-    int stopLocation = -660;
+        int stopLocation = -660;
 
-    //setting up the
+        //setting up the
     public ColaAttack(Context context)
-    {
-        super(context);
-        cola = BitmapFactory.decodeResource(getResources(), R.drawable.water);
-        //cola = Bitmap.createScaledBitmap(cola, 200, 100, true);
+        {
+            super(context);
+            cola = BitmapFactory.decodeResource(getResources(), R.drawable.water);
+            //cola = Bitmap.createScaledBitmap(cola, 200, 100, true);
 
         colaH = cola.getHeight();
         colaW = cola.getWidth() / numberOfFrames;

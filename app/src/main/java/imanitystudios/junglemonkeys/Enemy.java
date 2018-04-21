@@ -102,11 +102,9 @@ public class Enemy extends SurfaceView{
         screenWidth = w;
         screenHeight = h;
     }
-    public void setLocation(int L,int T){
-        left = L;
-
-        top = T;
-
+    public void setLocation(int T)
+    {
+        top += T;
     }
     public void damage(int attack)
     {
@@ -123,6 +121,9 @@ public class Enemy extends SurfaceView{
         readyForAction = false;
         eBullets bulletOBJ = new eBullets(eContext, left, top,screenHeight,screenWidth);
         return bulletOBJ;
+    }
+    public void setStopPoint(int s){
+        stopLocation+=s;
     }
 
 }

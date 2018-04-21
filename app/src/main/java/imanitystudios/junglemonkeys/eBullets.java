@@ -65,8 +65,5 @@ public class eBullets extends SurfaceView {
     public void drawBanana(Canvas canvas){
         bananaDestRect = new Rect(screenWidth/2+xPos +bLeft,screenHeight/2+yPos +bTop,screenWidth/2+xPos + bLeft+bananaW,screenHeight/2+yPos+bTop+bananaH);
         canvas.drawBitmap(bullet, bananaToBeDrawn,bananaDestRect,paint);
-        System.out.println(bananaDestRect);
-
     }
-
 }
