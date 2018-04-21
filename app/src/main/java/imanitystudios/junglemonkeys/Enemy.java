@@ -45,6 +45,19 @@ public class Enemy extends SurfaceView{
     int speed = 6000;
     int stopLocation = -660;
     boolean move = true;
+
+
+    //MonkeyAttack
+    private Bitmap banana;
+    int bananaW;
+    int bananaH;
+    Rect bananaToBeDrawn;
+    Rect bananaDestRect;
+    Paint bPaint;
+    int bFrameNumber;
+    boolean attack = true;
+    int bLeft = 100;
+    int bTop = 100;
     //setting up the
     public Enemy(Context context)
     {
@@ -52,6 +65,11 @@ public class Enemy extends SurfaceView{
         monkey = BitmapFactory.decodeResource(getResources(), R.drawable.monkeyspritesheet);
         monkeyH = monkey.getHeight();
         monkeyW = monkey.getWidth()/numbFrames;
+
+        //banana
+        banana = BitmapFactory.decodeResource(getResources(),R.drawable.banana);
+        bananaH = banana.getHeight();
+        bananaW = banana.getWidth();
 
         System.out.println("I am a fresh new Monkey");
         ourHolder = getHolder();
@@ -75,6 +93,15 @@ public class Enemy extends SurfaceView{
             move = true;
             frameNumber = 0;
         }
+        bananaToBeDrawn = new Rect((bFrameNumber * bananaW) - 1, 0, (bFrameNumber * bananaW + bananaW) - 1, bananaH);
+        if(attack)
+        {
+            bFrameNumber++;
+            if(bFrameNumber == frameNumber){
+                bFrameNumber = 0;
+            }
+
+        }
       //  System.out.println(left);
     }
 
@@ -83,6 +110,9 @@ public class Enemy extends SurfaceView{
     {
         destRect = new Rect (screenWidth/2+left,screenHeight/2+top,screenWidth/2+right,screenHeight/2+bottom);
         canvas.drawBitmap(monkey,rectToBeDrawn, destRect, paint);
+
+        bananaDestRect = new Rect(bLeft,bTop,bLeft+bananaW,bTop+bananaH);
+        canvas.drawBitmap(banana, bananaToBeDrawn,bananaDestRect,bPaint);
     }//katy is the best
 
     public void setScreen(int w, int h)

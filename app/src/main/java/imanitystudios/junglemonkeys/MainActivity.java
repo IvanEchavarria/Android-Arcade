@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     DrawingClass drawingClass;
 
     Enemy monkey;
+    ColaAttack colaAttack;
 
     Vector<MentosAttack> mentosList;
 
@@ -116,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(drawingClass);
 
         mentosList = new Vector<>();
+
+
     }
 
     @Override
@@ -144,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
                     {
                         buttonPressed = true;
                         Toast.makeText(this,"pressed Cola button",Toast.LENGTH_LONG).show();
+                        colaAttack = new ColaAttack(this);
+                        colaAttack.setScreen(screenWidth,screenWidth);
+
                     }
                 }
                 else if(!buttonPressed && xInitial >= gummyPosX && xInitial <= gummyPosX + gummy.getWidth())
@@ -208,7 +214,11 @@ public class MainActivity extends AppCompatActivity {
                 canvas = ourHolder.lockCanvas();
 
                 canvas.drawBitmap(background,0,0, null);
-
+                if(colaAttack !=null)
+                {
+                    colaAttack.update();
+                    colaAttack.drawCola(canvas);
+                }
                 if(monkey != null)
                 {
                     monkey.update();
@@ -232,6 +242,13 @@ public class MainActivity extends AppCompatActivity {
                                     mentosList.removeElementAt(i);
                                 }
                             }
+                            /*if(colaAttack!= null)
+                            {
+                                if (mentosList.elementAt(i).getRectangle().intersect(colaAttack.getRectangle())) {
+                                    colaAttack = null;
+                                    mentosList.removeElementAt(i);
+                                }
+                            }*/
                         }
                     }
                 }
