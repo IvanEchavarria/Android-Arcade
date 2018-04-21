@@ -179,9 +179,7 @@ public class MainActivity extends AppCompatActivity {
                         mentoOBJ.setScreen(screenWidth, screenHeight);
                         mentosList.add(mentoOBJ);
                     }
-//                    Enemy monkey = new Enemy(globalContext);
-//                    monkey.setScreen(screenWidth, screenHeight);
-//                    enemyList.add(monkey);
+//
                 }
                 return true;
 
@@ -280,47 +278,36 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-//                if(monkey != null)
-//                {
-//                    monkey.update();
-//                    monkey.drawMonkey(canvas);
-//                }
-
+//
                 if(mentosList != null && mentosList.size() > 0)
                 {
                     for(int i = 0; i < mentosList.size(); i++)
                     {
-                        if(mentosList.elementAt(i) != null)
-                        {
+                        if(mentosList.elementAt(i) != null) {
                             mentosList.elementAt(i).update(timeThisFrame);
                             mentosList.elementAt(i).drawMento(canvas);
 
-                            for(int j = 0; j < enemyList.size(); j++)
+                            if (mentosList.elementAt(i).getRectangle().top > screenHeight)
                             {
-                                if(mentosList.elementAt(i).getRectangle().intersect(enemyList.elementAt(j).getRectangle()))
-                                {
-                                    System.out.println("HIT LE MONKEY");
-                                    enemyList.removeElementAt(j);
-                                    mentosList.removeElementAt(i);
-                                    i = -1;
-                                    break;
-                                }
+                                mentosList.removeElementAt(i);
                             }
-//                            if(monkey != null)
-//                            {
-//                                if(mentosList.elementAt(i).getRectangle().intersect(monkey.getRectangle()))
-//                                {
-//                                    System.out.println("HIT LE MONKEY");
-//                                    monkey = null;
-//                                    mentosList.removeElementAt(i);
-//                                    break;
-//                                }
-//                            }
-                            if(i != -1 && colaAttack != null && mentosList.elementAt(i) != null)
+                            else
                             {
-                                if (mentosList.elementAt(i).getRectangle().intersect(colaAttack.getRectangle())) {
-                                    colaAttack = null;
-                                    mentosList.removeElementAt(i);
+
+                                for (int j = 0; j < enemyList.size(); j++) {
+                                    if (mentosList.elementAt(i).getRectangle().intersect(enemyList.elementAt(j).getRectangle())) {
+                                        System.out.println("HIT LE MONKEY");
+                                        enemyList.removeElementAt(j);
+                                        mentosList.removeElementAt(i);
+                                        i = -1;
+                                        break;
+                                    }
+                                }//
+                                if (i != -1 && colaAttack != null && mentosList.elementAt(i) != null) {
+                                    if (mentosList.elementAt(i).getRectangle().intersect(colaAttack.getRectangle())) {
+                                        colaAttack = null;
+                                        mentosList.removeElementAt(i);
+                                    }
                                 }
                             }
                         }
