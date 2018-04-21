@@ -15,7 +15,7 @@ import android.view.SurfaceView;
 
 public class eBullets extends SurfaceView {
 
-    private Bitmap banana;
+    private Bitmap bullet;
     int bananaW;
     int bananaH;
     Rect bananaToBeDrawn;
@@ -27,18 +27,26 @@ public class eBullets extends SurfaceView {
     int bTop = 80;
     int numbFrames = 4;
     int speed = 40;
-    public eBullets(Context context, int x, int y)
+    int xPos;
+    int yPos;
+    int screenWidth;
+    int screenHeight;
+
+    public eBullets(Context context, int x, int y,int h, int w)
     {
         super(context);
-        System.out.println("BANANNANANANANA");
+
         //banana
-        banana = BitmapFactory.decodeResource(getResources(),R.drawable.banana);
-        banana = Bitmap.createScaledBitmap(banana, 85,85,true);
-        bananaH = banana.getHeight();
-        bananaW = banana.getWidth()/numbFrames;
+        bullet = BitmapFactory.decodeResource(getResources(),R.drawable.banana);
+        bullet = Bitmap.createScaledBitmap(bullet, 85,85,true);
+        bananaH = bullet.getHeight();
+        bananaW = bullet.getWidth()/numbFrames;
         paint = new Paint();
 
-       bananaDestRect = new Rect(x +bLeft,y +bTop,x + bLeft+bananaW,y+bTop+bananaH);
+       xPos = x;
+       yPos = y;
+       screenHeight = h;
+       screenWidth = w;
         //bananaDestRect = new Rect(bLeft,bTop, bLeft+bananaW,bTop+bananaH);
     }
     public void update(){
@@ -51,12 +59,13 @@ public class eBullets extends SurfaceView {
             }
             bLeft -=speed;
         }
-        System.out.println("updateBanana");
+
 
     }
     public void drawBanana(Canvas canvas){
-        canvas.drawBitmap(banana, bananaToBeDrawn,bananaDestRect,paint);
-        System.out.println("drawBANANANNA");
+        bananaDestRect = new Rect(screenWidth/2+xPos +bLeft,screenHeight/2+yPos +bTop,screenWidth/2+xPos + bLeft+bananaW,screenHeight/2+yPos+bTop+bananaH);
+        canvas.drawBitmap(bullet, bananaToBeDrawn,bananaDestRect,paint);
+        System.out.println(bananaDestRect);
 
     }
 

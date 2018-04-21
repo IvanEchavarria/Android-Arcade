@@ -230,18 +230,19 @@ public class MainActivity extends AppCompatActivity {
             }
             enemySpawnerClock++;
 
-//            if(monkey != null && monkey.readyForAction)
-//            {
-//               // addBullet(monkey.shoot());
-//            }
-            if(eBulletList.size()>0)
+            if(enemyList != null && enemyList.size() > 0)
             {
-                for(int i = 0; i< eBulletList.size();i++)
-                {
-                    eBulletList.elementAt(i).update();
-                    eBulletList.elementAt(i).drawBanana(canvas);
+                for (int i = 0; i < enemyList.size(); i++) {
+                    if (enemyList != null && enemyList.elementAt(i).readyForAction) {
+                        if (enemyList.elementAt(i) != null)
+                        {
+                            addBullet(enemyList.elementAt(i).shoot());
+                        }
+
+                    }
                 }
             }
+
         }
 
         private void draw()
@@ -251,6 +252,14 @@ public class MainActivity extends AppCompatActivity {
                 canvas = ourHolder.lockCanvas();
                 canvas.drawBitmap(background,0,0, null);
 
+                if(eBulletList.size()>0)
+                {
+                    for(int i = 0; i< eBulletList.size();i++)
+                    {
+                        eBulletList.elementAt(i).update();
+                        eBulletList.elementAt(i).drawBanana(canvas);
+                    }
+                }
                 if(colaAttack !=null)
                 {
                     colaAttack.update();

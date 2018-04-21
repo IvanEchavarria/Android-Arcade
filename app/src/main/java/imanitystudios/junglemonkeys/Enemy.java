@@ -40,12 +40,12 @@ public class Enemy extends SurfaceView{
 
     int hp = 100;
     //pos and move the gab between the numbers should be always 200
-    int left = 1700;
+    int left = 850;
     int right = 800;
-    int top = 650;
+    int top = 200;
     int bottom = 300;
     int speed = 20;
-    int stopLocation = 340;
+    int stopLocation = screenWidth/2;
     boolean move = true;
     Context eContext;
     int counter = 0;
@@ -80,17 +80,19 @@ public class Enemy extends SurfaceView{
         {
             move = true;
             frameNumber = 0;
+            counter++;
+            if(counter == 5){
+                readyForAction = true;
+                counter = 0;
+            }
         }
-        counter++;
-        if(counter == 5){
-            readyForAction = true;
-        }
+
     }
 
     //control where the monkey is drawn
     public void drawMonkey(Canvas canvas)
     {
-        destRect = new Rect (left,top,left + monkeyW,top + monkeyH);
+        destRect = new Rect (screenWidth/2+left,screenHeight/2+top,screenWidth/2+left + monkeyW,screenHeight/2+top + monkeyH);
         canvas.drawBitmap(monkey,rectToBeDrawn, destRect, paint);
 
     }//katy is the best
@@ -100,11 +102,11 @@ public class Enemy extends SurfaceView{
         screenWidth = w;
         screenHeight = h;
     }
-    public void setLocation(int L, int B,int T, int R){
+    public void setLocation(int L,int T){
         left = L;
-        bottom = B;
+
         top = T;
-        right = R;
+
     }
     public void damage(int attack)
     {
@@ -119,7 +121,7 @@ public class Enemy extends SurfaceView{
     public eBullets shoot()
     {
         readyForAction = false;
-        eBullets bulletOBJ = new eBullets(eContext, left, top);
+        eBullets bulletOBJ = new eBullets(eContext, left, top,screenHeight,screenWidth);
         return bulletOBJ;
     }
 
