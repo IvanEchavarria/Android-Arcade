@@ -20,6 +20,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
@@ -69,11 +70,15 @@ public class MainActivity extends AppCompatActivity {
 
     DrawingClass drawingClass;
 
-    Enemy monkey;
     ColaAttack colaAttack;
 
     Vector<MentosAttack> mentosList;
     Vector<eBullets> eBulletList;
+    Vector<Enemy> enemyList;
+
+    int enemySpawnerClock;
+
+    Context globalContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,15 +116,16 @@ public class MainActivity extends AppCompatActivity {
         gummyPosy = screenHeight - gummy.getHeight() - 90;
 
         drawingClass = new DrawingClass(this);
-        monkey = new Enemy(this);
 
-        monkey.setScreen(screenWidth, screenHeight);
         setContentView(drawingClass);
 
         mentosList = new Vector<>();
 
         eBulletList = new Vector<>();
 
+        enemyList = new Vector<>();
+
+        globalContext = this;
     }
 
     @Override
@@ -148,8 +154,12 @@ public class MainActivity extends AppCompatActivity {
                     {
                         buttonPressed = true;
                         Toast.makeText(this,"pressed Cola button",Toast.LENGTH_LONG).show();
-                        colaAttack = new ColaAttack(this);
-                        colaAttack.setScreen(screenWidth,screenWidth);
+
+                        if(colaAttack == null)
+                        {
+                            colaAttack = new ColaAttack(this);
+                            colaAttack.setScreen(screenWidth,screenWidth);
+                        }
 
                     }
                 }
@@ -167,6 +177,10 @@ public class MainActivity extends AppCompatActivity {
                     mentoOBJ.setLocation((int)xInitial);
                     mentoOBJ.setScreen(screenWidth, screenHeight);
                     mentosList.add(mentoOBJ);
+
+//                    Enemy monkey = new Enemy(globalContext);
+//                    monkey.setScreen(screenWidth, screenHeight);
+//                    enemyList.add(monkey);
                 }
                 return true;
 
@@ -201,15 +215,25 @@ public class MainActivity extends AppCompatActivity {
                 update();
                 draw();
                 controlFPS();
+                System.gc();/// Added garbage collector
             }
         }
 
         public void update()
         {
-            if(monkey.readyForAction)
+
+            if(enemySpawnerClock >= 5)
             {
-               // addBullet(monkey.shoot());
+                enemySpawnerClock = 0;
+
+                createEnemy();
             }
+            enemySpawnerClock++;
+
+//            if(monkey != null && monkey.readyForAction)
+//            {
+//               // addBullet(monkey.shoot());
+//            }
             if(eBulletList.size()>0)
             {
                 for(int i = 0; i< eBulletList.size();i++)
@@ -225,20 +249,32 @@ public class MainActivity extends AppCompatActivity {
             if(ourHolder.getSurface().isValid())
             {
                 canvas = ourHolder.lockCanvas();
-
                 canvas.drawBitmap(background,0,0, null);
+
                 if(colaAttack !=null)
                 {
                     colaAttack.update();
                     colaAttack.drawCola(canvas);
                 }
-                if(monkey != null)
-                {
-                    monkey.update();
-                    monkey.drawMonkey(canvas);
-                }
 
-                if(mentosList != null)
+                if(enemyList != null && enemyList.size() > 0)
+                {
+                    for (int i = 0; i < enemyList.size(); i++)
+                    {
+                        if (enemyList.elementAt(i) != null)
+                        {
+                            enemyList.elementAt(i).update();
+                            enemyList.elementAt(i).drawMonkey(canvas);
+                        }
+                    }
+                }
+//                if(monkey != null)
+//                {
+//                    monkey.update();
+//                    monkey.drawMonkey(canvas);
+//                }
+
+                if(mentosList != null && mentosList.size() > 0)
                 {
                     for(int i = 0; i < mentosList.size(); i++)
                     {
@@ -246,22 +282,35 @@ public class MainActivity extends AppCompatActivity {
                         {
                             mentosList.elementAt(i).update(timeThisFrame);
                             mentosList.elementAt(i).drawMento(canvas);
-                            if(monkey != null)
+
+                            for(int j = 0; j < enemyList.size(); j++)
                             {
-                                if(mentosList.elementAt(i).getRectangle().intersect(monkey.getRectangle()))
+                                if(mentosList.elementAt(i).getRectangle().intersect(enemyList.elementAt(j).getRectangle()))
                                 {
                                     System.out.println("HIT LE MONKEY");
-                                    monkey = null;
+                                    enemyList.removeElementAt(j);
                                     mentosList.removeElementAt(i);
+                                    i = -1;
+                                    break;
                                 }
                             }
-                            /*if(colaAttack!= null)
+//                            if(monkey != null)
+//                            {
+//                                if(mentosList.elementAt(i).getRectangle().intersect(monkey.getRectangle()))
+//                                {
+//                                    System.out.println("HIT LE MONKEY");
+//                                    monkey = null;
+//                                    mentosList.removeElementAt(i);
+//                                    break;
+//                                }
+//                            }
+                            if(i != -1 && colaAttack != null && mentosList.elementAt(i) != null)
                             {
                                 if (mentosList.elementAt(i).getRectangle().intersect(colaAttack.getRectangle())) {
                                     colaAttack = null;
                                     mentosList.removeElementAt(i);
                                 }
-                            }*/
+                            }
                         }
                     }
                 }
@@ -341,5 +390,15 @@ public class MainActivity extends AppCompatActivity {
         eBulletList.add(bullets);
     }
 
+    public void createEnemy()
+    {
+        if(Looper.myLooper() == null)
+        {
+            Looper.prepare();
+        }
+        Enemy monkey = new Enemy(this);
+        monkey.setScreen(screenWidth, screenHeight);
+        enemyList.add(monkey);
+    }
 
 }

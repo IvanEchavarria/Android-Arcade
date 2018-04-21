@@ -26,9 +26,6 @@ public class MentosAttack extends SurfaceView {
     int screenWidth;
     int screenHeight;
 
-
-
-
     SurfaceHolder ourHolder;
     Paint paint;
 
