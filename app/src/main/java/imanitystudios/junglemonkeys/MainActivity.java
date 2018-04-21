@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         {
             if(monkey.readyForAction)
             {
-                addBullet(monkey.shoot());
+               // addBullet(monkey.shoot());
             }
             if(eBulletList.size()>0)
             {

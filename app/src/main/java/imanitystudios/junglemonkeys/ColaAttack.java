@@ -22,7 +22,8 @@ public class ColaAttack extends SurfaceView {
     Rect destRect;
     int screenWidth;
     int screenHeight;
-
+    int frameNumber = 5;
+    int numberOfFrames = 6;
 
 
 
@@ -42,17 +43,17 @@ public class ColaAttack extends SurfaceView {
     {
         super(context);
         cola = BitmapFactory.decodeResource(getResources(), R.drawable.water);
-        cola = Bitmap.createScaledBitmap(cola, 500, 200, true);
+        //cola = Bitmap.createScaledBitmap(cola, 200, 100, true);
 
         colaH = cola.getHeight();
-        colaW = cola.getWidth();
+        colaW = cola.getWidth() / numberOfFrames;
         ourHolder = getHolder();
         paint = new Paint();
+        rectToBeDrawn = new Rect((frameNumber * colaW), 0, (frameNumber * colaW + colaW), colaH);
     }
     //The update is in charge of making the animation move and move
     public void update()
     {
-        rectToBeDrawn = new Rect(0, 0, colaW, colaH);
 
     }
 
