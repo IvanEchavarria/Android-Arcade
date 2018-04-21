@@ -38,12 +38,12 @@ public class Enemy extends SurfaceView{
 
     int hp = 100;
     //pos and move the gab between the numbers should be always 200
-    int left = 600;
+    int left = 1700;
     int right = 800;
-    int top = 100;
+    int top = 650;
     int bottom = 300;
-    int speed = 6000;
-    int stopLocation = -660;
+    int speed = 20;
+    int stopLocation = 340;
     boolean move = true;
 
 
@@ -54,22 +54,24 @@ public class Enemy extends SurfaceView{
     Rect bananaToBeDrawn;
     Rect bananaDestRect;
     Paint bPaint;
-    int bFrameNumber;
+    int bFrameNumber = 0;
     boolean attack = true;
-    int bLeft = 100;
-    int bTop = 100;
+    int bLeft = -20;
+    int bTop = 80;
     //setting up the
     public Enemy(Context context)
     {
         super(context);
         monkey = BitmapFactory.decodeResource(getResources(), R.drawable.monkeyspritesheet);
+        monkey = Bitmap.createScaledBitmap(monkey, 360,250,true);
         monkeyH = monkey.getHeight();
         monkeyW = monkey.getWidth()/numbFrames;
 
         //banana
         banana = BitmapFactory.decodeResource(getResources(),R.drawable.banana);
+        banana = Bitmap.createScaledBitmap(banana, 85,85,true);
         bananaH = banana.getHeight();
-        bananaW = banana.getWidth();
+        bananaW = banana.getWidth()/numbFrames;
 
         System.out.println("I am a fresh new Monkey");
         ourHolder = getHolder();
@@ -85,8 +87,7 @@ public class Enemy extends SurfaceView{
             if (numbFrames == frameNumber) {
                 frameNumber = 0;
             }
-            left -= speed*0.02 ;
-            right -= speed*0.02;
+            left -= speed ;
         }
         if(left <= stopLocation)
         {
@@ -97,21 +98,22 @@ public class Enemy extends SurfaceView{
         if(attack)
         {
             bFrameNumber++;
-            if(bFrameNumber == frameNumber){
+            if(bFrameNumber == numbFrames){
                 bFrameNumber = 0;
             }
+            bLeft -=speed;
 
         }
-      //  System.out.println(left);
+        System.out.println(left);
     }
 
     //control where the monkey is drawn
     public void drawMonkey(Canvas canvas)
     {
-        destRect = new Rect (screenWidth/2+left,screenHeight/2+top,screenWidth/2+right,screenHeight/2+bottom);
+        destRect = new Rect (left,top,left + monkeyW,top + monkeyH);
         canvas.drawBitmap(monkey,rectToBeDrawn, destRect, paint);
 
-        bananaDestRect = new Rect(bLeft,bTop,bLeft+bananaW,bTop+bananaH);
+        bananaDestRect = new Rect(left +bLeft,top +bTop,left + bLeft+bananaW,top+bTop+bananaH);
         canvas.drawBitmap(banana, bananaToBeDrawn,bananaDestRect,bPaint);
     }//katy is the best
 
