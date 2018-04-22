@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     //stats
     int health = 100;
     int score = 0;
-    float timer = 0;
+    float timer = 120000;
 
     MediaPlayer mainTheme;
 
@@ -155,6 +155,16 @@ public class MainActivity extends AppCompatActivity {
         globalContext = this;
     }
 
+    private void gameOver()
+    {
+        Intent intent = new Intent(this, GameoverActivity.class);
+        startActivity(intent);
+    }
+    private void winGame()
+    {
+        Intent intent = new Intent(this, vicotryActivity.class);
+        startActivity(intent);
+    }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -217,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onTouchEvent(event);
+
     }
 
     class DrawingClass extends SurfaceView implements Runnable
@@ -247,6 +258,10 @@ public class MainActivity extends AppCompatActivity {
 
         public void update()
         {
+
+            if(timer<=0){
+                winGame();
+            }
 
             if(enemySpawnerClock >= 2)
             {
@@ -302,6 +317,9 @@ public class MainActivity extends AppCompatActivity {
                         if (eBulletList.elementAt(i).getRectangle().left < (screenWidth/2)-600){
                             eBulletList.removeElementAt(i);
                             health -=10;
+                            if(health <= 0){
+                               // gameOver();
+                            }
                         }
 
                     }
