@@ -25,7 +25,7 @@ public class ColaAttack extends SurfaceView {
     int frameNumber = 5;
     int numberOfFrames = 6;
 
-
+    int hp =600;
 
     SurfaceHolder ourHolder;
     Paint paint;
@@ -33,7 +33,7 @@ public class ColaAttack extends SurfaceView {
     //pos and move the gab between the numbers should be always 200
     int left = 800;
     int right = 100;
-    int top = 820;
+    int top = 600;
     int bottom = 100;
 
         int stopLocation = -660;
@@ -74,6 +74,9 @@ public class ColaAttack extends SurfaceView {
         return destRect;
     }
 
-
+    public void damage(int attack)
+    {
+        hp -= attack;
+    }
 
 }

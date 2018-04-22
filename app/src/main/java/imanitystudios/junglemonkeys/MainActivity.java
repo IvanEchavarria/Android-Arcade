@@ -17,9 +17,12 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.os.CountDownTimer;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,8 +83,24 @@ public class MainActivity extends AppCompatActivity {
 
     Context globalContext;
 
+    //stats
+    int health = 100;
+    int score = 0;
+    float timer = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        new CountDownTimer(120000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                timer = millisUntilFinished / 1000;
+            }
+
+            public void onFinish() {
+
+            }
+        }.start();
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -124,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
         eBulletList = new Vector<>();
 
         enemyList = new Vector<>();
+
+
 
         globalContext = this;
     }
@@ -173,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    if(mentosList.size()<3) {
+                    if(mentosList.size()<2) {
                         MentosAttack mentoOBJ = new MentosAttack(this);
                         mentoOBJ.setLocation((int) xInitial);
                         mentoOBJ.setScreen(screenWidth, screenHeight);
@@ -221,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         public void update()
         {
 
-            if(enemySpawnerClock >= 5)
+            if(enemySpawnerClock >= 2)
             {
                 enemySpawnerClock = 0;
                 if(enemyList.size()<8)
@@ -244,6 +265,25 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            /*if(colaAttack!=null && enemyList != null && enemyList.size() > 0) {
+                for (int i = 0;i<enemyList.size();i++){
+                    if(colaAttack!=null)
+                    {
+                        if (enemyList.elementAt(i).getRectangle().intersect(colaAttack.getRectangle()))
+                        {
+                            colaAttack.damage(20);
+                            enemyList.elementAt(i).damage(20);
+                            if(enemyList.elementAt(i).hp<=0)
+                            {
+                                enemyList.removeElementAt(i);
+                            }
+                        }
+                        if(colaAttack.hp<=0){
+                            colaAttack = null;
+                        }
+                    }
+                }
+            }*/
         }
 
         private void draw()
@@ -252,13 +292,23 @@ public class MainActivity extends AppCompatActivity {
             {
                 canvas = ourHolder.lockCanvas();
                 canvas.drawBitmap(background,0,0, null);
-
+                paint.setTextSize(50);
+                paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                paint.setColor(Color.rgb(255,165,0));
+                canvas.drawText(" Health: "+(int)health,50,40,paint);
+                canvas.drawText("Score:"+(int)score,1400,40,paint);
+                canvas.drawText("Time: "+(int)timer, screenWidth/2,40,paint);
                 if(eBulletList.size()>0)
                 {
                     for(int i = 0; i< eBulletList.size();i++)
                     {
                         eBulletList.elementAt(i).update();
                         eBulletList.elementAt(i).drawBanana(canvas);
+                        if (eBulletList.elementAt(i).getRectangle().left < screenWidth/2-600){
+                            eBulletList.removeElementAt(i);
+                            health -=10;
+                        }
+
                     }
                 }
                 if(colaAttack !=null)
@@ -278,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-//
+
                 if(mentosList != null && mentosList.size() > 0)
                 {
                     for(int i = 0; i < mentosList.size(); i++)
@@ -296,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 for (int j = 0; j < enemyList.size(); j++) {
                                     if (mentosList.elementAt(i).getRectangle().intersect(enemyList.elementAt(j).getRectangle())) {
+                                        score+=10;
                                         System.out.println("HIT LE MONKEY");
                                         enemyList.removeElementAt(j);
                                         mentosList.removeElementAt(i);

@@ -26,7 +26,7 @@ public class eBullets extends SurfaceView {
     int bLeft = -20;
     int bTop = 80;
     int numbFrames = 4;
-    int speed = 40;
+    int speed = 80;
     int xPos;
     int yPos;
     int screenWidth;
@@ -60,10 +60,13 @@ public class eBullets extends SurfaceView {
             bLeft -=speed;
         }
 
-
     }
     public void drawBanana(Canvas canvas){
         bananaDestRect = new Rect(screenWidth/2+xPos +bLeft,screenHeight/2+yPos +bTop,screenWidth/2+xPos + bLeft+bananaW,screenHeight/2+yPos+bTop+bananaH);
         canvas.drawBitmap(bullet, bananaToBeDrawn,bananaDestRect,paint);
+    }
+    public Rect getRectangle()
+    {
+        return bananaDestRect;
     }
 }

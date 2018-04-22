@@ -44,7 +44,7 @@ public class Enemy extends SurfaceView{
     int right = 800;
     int top = 200;
     int bottom = 300;
-    int speed = 20;
+    int speed = 60;
     int stopLocation = screenWidth/2;
     boolean move = true;
     Context eContext;
@@ -57,7 +57,7 @@ public class Enemy extends SurfaceView{
     {
         super(context);
         monkey = BitmapFactory.decodeResource(getResources(), R.drawable.monkeyspritesheet);
-        monkey = Bitmap.createScaledBitmap(monkey, 360,250,true);
+        monkey = Bitmap.createScaledBitmap(monkey, 500,200,true);
         monkeyH = monkey.getHeight();
         monkeyW = monkey.getWidth()/numbFrames;
 
