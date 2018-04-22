@@ -329,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
                             eBulletList.removeElementAt(i);
                             health -=10;
                             if(health <= 0){
-                               // gameOver();
+                                gameOver();
                             }
                         }
 
