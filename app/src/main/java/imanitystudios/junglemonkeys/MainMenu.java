@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 
 
 public class MainMenu extends AppCompatActivity {
@@ -16,7 +17,7 @@ public class MainMenu extends AppCompatActivity {
     Button Play;
     Button instruction;
     Button back;
-
+    ImageView inst;
     MediaPlayer introSong;
 
     @Override
@@ -36,7 +37,7 @@ public class MainMenu extends AppCompatActivity {
         Play = (Button) findViewById(R.id.StartGame);
         instruction = (Button)findViewById(R.id.Instruction);
         back = (Button)findViewById(R.id.back);
-
+        inst =(ImageView)findViewById(R.id.imageInst);
         PlayButtonListener playButtonListener = new PlayButtonListener();
         Play.setOnClickListener(playButtonListener);
 
@@ -86,6 +87,7 @@ public class MainMenu extends AppCompatActivity {
             Play.setVisibility(View.INVISIBLE);
             instruction.setVisibility(View.INVISIBLE);
             back.setVisibility(View.VISIBLE);
+            inst.setVisibility(View.VISIBLE);
         }
     }
 
@@ -98,6 +100,7 @@ public class MainMenu extends AppCompatActivity {
             Play.setVisibility(View.VISIBLE);
             instruction.setVisibility(View.VISIBLE);
             back.setVisibility(View.INVISIBLE);
+            inst.setVisibility(View.INVISIBLE);
         }
     }
 
