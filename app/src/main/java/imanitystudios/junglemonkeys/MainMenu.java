@@ -2,6 +2,7 @@ package imanitystudios.junglemonkeys;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,8 @@ public class MainMenu extends AppCompatActivity {
     Button instruction;
     Button back;
 
+    MediaPlayer introSong;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -23,6 +26,10 @@ public class MainMenu extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
+        introSong = MediaPlayer.create(this,R.raw.introsong);
+        introSong.setLooping(true);
+        introSong.start();
 
         //setting up the buttons
         quit = (Button) findViewById(R.id.quit);
@@ -49,6 +56,8 @@ public class MainMenu extends AppCompatActivity {
     private void startGame()
     {
         Intent intent = new Intent(this, MainActivity.class);
+        introSong.setLooping(false);
+        introSong.stop();
         startActivity(intent);
     }
 

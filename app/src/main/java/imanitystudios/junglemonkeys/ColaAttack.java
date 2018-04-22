@@ -49,12 +49,18 @@ public class ColaAttack extends SurfaceView {
         colaW = cola.getWidth() / numberOfFrames;
         ourHolder = getHolder();
         paint = new Paint();
-        rectToBeDrawn = new Rect((frameNumber * colaW), 0, (frameNumber * colaW + colaW), colaH);
+        //rectToBeDrawn = new Rect((frameNumber * colaW), 0, (frameNumber * colaW + colaW), colaH);
     }
     //The update is in charge of making the animation move and move
     public void update()
     {
+        rectToBeDrawn = new Rect((frameNumber * colaW) - 1, 0, (frameNumber * colaW + colaW) - 1, colaH);
+        frameNumber++;
+        if (numberOfFrames == frameNumber)
+        {
+           frameNumber = 0;
 
+        }
     }
 
     //control where the cola is drawn

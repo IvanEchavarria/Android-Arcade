@@ -22,6 +22,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
     int score = 0;
     float timer = 0;
 
+    MediaPlayer mainTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -102,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
 
+        mainTheme = MediaPlayer.create(this,R.raw.mainsong);
+        mainTheme.setLooping(true);
+        mainTheme.start();
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
@@ -166,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                     if(yInitial >= candyPosy && yInitial <= candyPosy + candy.getHeight())
                     {
                         buttonPressed = true;
-                        Toast.makeText(this,"pressed Candy button",Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(this,"pressed Candy button",Toast.LENGTH_LONG).show();
                     }
                 }
                 else if(!buttonPressed && xInitial >= colaPosX && xInitial <= colaPosX + cola.getWidth())
@@ -174,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                     if(yInitial >= colaPosy && yInitial <= colaPosy + cola.getHeight())
                     {
                         buttonPressed = true;
-                        Toast.makeText(this,"pressed Cola button",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(this,"pressed Cola button",Toast.LENGTH_LONG).show();
 
                         if(colaAttack == null)
                         {
@@ -189,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                     if(yInitial >= gummyPosy && yInitial <= gummyPosy + gummy.getHeight())
                     {
                         buttonPressed = true;
-                        Toast.makeText(this,"pressed Gummy button",Toast.LENGTH_LONG).show();
+                       // Toast.makeText(this,"pressed Gummy button",Toast.LENGTH_LONG).show();
                     }
                 }
                 else
@@ -265,25 +271,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            /*if(colaAttack!=null && enemyList != null && enemyList.size() > 0) {
-                for (int i = 0;i<enemyList.size();i++){
-                    if(colaAttack!=null)
-                    {
-                        if (enemyList.elementAt(i).getRectangle().intersect(colaAttack.getRectangle()))
-                        {
-                            colaAttack.damage(20);
-                            enemyList.elementAt(i).damage(20);
-                            if(enemyList.elementAt(i).hp<=0)
-                            {
-                                enemyList.removeElementAt(i);
-                            }
-                        }
-                        if(colaAttack.hp<=0){
-                            colaAttack = null;
-                        }
-                    }
-                }
-            }*/
+
         }
 
         private void draw()
@@ -298,23 +286,25 @@ public class MainActivity extends AppCompatActivity {
                 canvas.drawText(" Health: "+(int)health,50,40,paint);
                 canvas.drawText("Score:"+(int)score,1400,40,paint);
                 canvas.drawText("Time: "+(int)timer, screenWidth/2,40,paint);
+
+                if(colaAttack !=null)
+                {
+                    colaAttack.update();
+                    colaAttack.drawCola(canvas);
+                }
+
                 if(eBulletList.size()>0)
                 {
                     for(int i = 0; i< eBulletList.size();i++)
                     {
                         eBulletList.elementAt(i).update();
                         eBulletList.elementAt(i).drawBanana(canvas);
-                        if (eBulletList.elementAt(i).getRectangle().left < screenWidth/2-600){
+                        if (eBulletList.elementAt(i).getRectangle().left < (screenWidth/2)-600){
                             eBulletList.removeElementAt(i);
                             health -=10;
                         }
 
                     }
-                }
-                if(colaAttack !=null)
-                {
-                    colaAttack.update();
-                    colaAttack.drawCola(canvas);
                 }
 
                 if(enemyList != null && enemyList.size() > 0)
@@ -364,6 +354,32 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+
+
+                if(enemyList != null && enemyList.size() > 0)
+                {
+                    for (int i = 0;i < enemyList.size();i++)
+                    {
+                        if(colaAttack!=null )
+                        {
+                            if(colaAttack.getRectangle().intersect(enemyList.elementAt(i).getRectangle()))
+                            {
+                                colaAttack.damage(20);
+                                enemyList.elementAt(i).damage(20);
+                                if(enemyList.elementAt(i).hp <= 0)
+                                {
+                                    enemyList.removeElementAt(i);
+                                }
+
+                                if(colaAttack.hp <= 0){
+                                    colaAttack = null;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
 
                 canvas.drawBitmap(candy, 100, screenHeight - candy.getHeight() - 90 , null);
                 canvas.drawBitmap(cola, 100 + candy.getWidth(), screenHeight - cola.getHeight() - 90 , null);
