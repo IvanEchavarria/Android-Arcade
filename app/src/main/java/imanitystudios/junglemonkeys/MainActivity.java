@@ -90,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
     float timer = 120000;
 
     MediaPlayer mainTheme;
+    MediaPlayer bananaShot;
+    MediaPlayer monkeyDeath;
+    MediaPlayer colaSound;
+    MediaPlayer mentoSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +154,10 @@ public class MainActivity extends AppCompatActivity {
 
         enemyList = new Vector<>();
 
-
+       bananaShot = MediaPlayer.create(this,R.raw.shot);
+       monkeyDeath = MediaPlayer.create(this,R.raw.monkeydie);
+       colaSound = MediaPlayer.create(this,R.raw.colaboil);
+        mentoSound= MediaPlayer.create(this,R.raw.mentospawn);
 
         globalContext = this;
     }
@@ -196,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
                         {
                             colaAttack = new ColaAttack(this);
                             colaAttack.setScreen(screenWidth,screenWidth);
+                            colaSound.start();
                         }
 
                     }
@@ -211,10 +219,12 @@ public class MainActivity extends AppCompatActivity {
                 else
                 {
                     if(mentosList.size()<2) {
+
                         MentosAttack mentoOBJ = new MentosAttack(this);
                         mentoOBJ.setLocation((int) xInitial);
                         mentoOBJ.setScreen(screenWidth, screenHeight);
                         mentosList.add(mentoOBJ);
+                        mentoSound.start();
                     }
 //
                 }
@@ -280,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
                         if (enemyList.elementAt(i) != null)
                         {
                             addBullet(enemyList.elementAt(i).shoot());
+                            bananaShot.start();
                         }
 
                     }
@@ -357,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
                                         score+=10;
                                         System.out.println("HIT LE MONKEY");
                                         enemyList.removeElementAt(j);
+                                        monkeyDeath.start();
                                         mentosList.removeElementAt(i);
                                         i = -1;
                                         break;
@@ -387,6 +399,7 @@ public class MainActivity extends AppCompatActivity {
                                 if(enemyList.elementAt(i).hp <= 0)
                                 {
                                     enemyList.removeElementAt(i);
+                                    monkeyDeath.start();
                                 }
 
                                 if(colaAttack.hp <= 0){
