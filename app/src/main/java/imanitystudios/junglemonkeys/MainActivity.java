@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer bananaShot;
     MediaPlayer monkeyDeath;
     MediaPlayer colaSound;
+    MediaPlayer mentoSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
        bananaShot = MediaPlayer.create(this,R.raw.shot);
        monkeyDeath = MediaPlayer.create(this,R.raw.monkeydie);
        colaSound = MediaPlayer.create(this,R.raw.colaboil);
+        mentoSound= MediaPlayer.create(this,R.raw.mentospawn);
 
         globalContext = this;
     }
@@ -207,10 +209,12 @@ public class MainActivity extends AppCompatActivity {
                 else
                 {
                     if(mentosList.size()<2) {
+
                         MentosAttack mentoOBJ = new MentosAttack(this);
                         mentoOBJ.setLocation((int) xInitial);
                         mentoOBJ.setScreen(screenWidth, screenHeight);
                         mentosList.add(mentoOBJ);
+                        mentoSound.start();
                     }
 //
                 }
